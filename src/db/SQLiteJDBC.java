@@ -53,7 +53,6 @@ public class SQLiteJDBC extends DbConnector {
                         + " PRIMARY KEY (DATE, TIME, LINE));";
                 stmt.executeUpdate(sql);
                 stmt.close();
-//                db.close();
             }
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -72,7 +71,6 @@ public class SQLiteJDBC extends DbConnector {
             stmt.executeUpdate(sql);
             stmt.close();
             c.commit();
-//            c.close();
         } catch (Exception e) {
             System.err.println("insertRow: " + e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
