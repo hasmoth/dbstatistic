@@ -8,7 +8,8 @@ public class DbCrawler {
 		ConnectorFactory connFactory = new ConnectorFactory();
 		DbConnector conn = null;
 		try {
-			conn = connFactory.getConnector("SQLITE");
+			//conn = connFactory.getConnector("SQLITE");
+			conn = connFactory.getConnector("MYSQL", "192.168.1.100/dbstat");
 		} catch (NullPointerException e) {
 			return;
 		}

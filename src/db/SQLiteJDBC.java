@@ -59,7 +59,7 @@ public class SQLiteJDBC extends DbConnector {
             System.exit(0);
         }
     }
-
+    @Override
     public void insertRow(TrainInstance train) {
         try {
             c.setAutoCommit(false);
@@ -76,7 +76,7 @@ public class SQLiteJDBC extends DbConnector {
             System.exit(0);
         }
     }
-
+    @Override
     public String fetchRow() {
         // dbConnector();
     	// TODO: SELECT line,delay FROM DBSTAT WHERE line LIKE 'S%';
