@@ -6,7 +6,12 @@ public class DbCrawler {
 	public static void main(String[] args) throws ParseException {
 		
 		ConnectorFactory connFactory = new ConnectorFactory();
-		DbConnector conn = connFactory.getConnector("SQLITE");
+		DbConnector conn = null;
+		try {
+			conn = connFactory.getConnector("SQLITE");
+		} catch (NullPointerException e) {
+			return;
+		}
 		
 		WebCrawler crawl = new WebCrawler();
 		while (true) {
