@@ -2,7 +2,7 @@ package db;
 
 /**
  * Factory class to implement connectors to specific databases.
- * @author atoms.h
+ * @author hasmoth
  * 
  */
 public class ConnectorFactory {
