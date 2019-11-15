@@ -2,11 +2,7 @@ package db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 
 public class MySqlJDBC extends DbConnector {
 	protected Connection c = null;
@@ -18,8 +14,8 @@ public class MySqlJDBC extends DbConnector {
 		createTable(c);
 	}
 	
-	public MySqlJDBC(String name) {
-		dbConnector(name);
+	public MySqlJDBC(String name, String addr) {
+		dbConnector(addr + "/" + name);
 		createTable(c);
 	}
 

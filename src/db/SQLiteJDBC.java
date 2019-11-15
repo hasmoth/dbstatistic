@@ -22,7 +22,7 @@ public class SQLiteJDBC extends DbConnector {
 
     public SQLiteJDBC(String name) {
         super();
-        dbConnector(name);
+        dbConnector("data/"+name);
         createTable(c);
     }
 
