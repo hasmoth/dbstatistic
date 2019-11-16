@@ -11,14 +11,16 @@ public class TrainType {
 	
 	public TrainType(String type) {
 		String[] input = type.split(" ");
-		if (input.length > 1)
+		train_ = convertType(input[0]);
+		if (input.length > 1) {
 			try {
 				line_ = Integer.parseInt(input[1]);
 			} catch (NumberFormatException e) {
 				String[] tmp = input[1].split("(?<=\\D)(?=\\d)");
-				line_ = Integer.parseInt(tmp[1]);
+				if (tmp.length > 1)
+					line_ = Integer.parseInt(tmp[1]);
 			}
-		train_ = convertType(input[0]);
+		}
 	}
 	public enum TRAIN {
 		S,

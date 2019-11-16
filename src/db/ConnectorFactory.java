@@ -11,25 +11,26 @@ import java.util.Properties;
 public class ConnectorFactory {
 	private DbConnector connector_ = null;
 	private Properties prop = new Properties();
-	private String dbtype = new String();
+	private String dbmode = new String();
 	private String dbname = new String();
 	private String dbaddr = new String();
+	
 	private void initConnectorFactory() {
 		try {
 			prop = new PropertyValues().getPropValues();
 		} catch (IOException e) {
 			System.out.println("Exception: " + e);
 		}
-		dbtype = prop.getProperty("dbtype");
+		dbmode = prop.getProperty("dbmode");
 		dbname = prop.getProperty("dbname");
 		dbaddr = prop.getProperty("dbaddr");
+		System.out.println(dbmode + " " + dbname + " " + dbaddr);
 	}
 	public DbConnector getConnector() throws NullPointerException {
 		initConnectorFactory();
-		if (dbtype == null) return null;
-		if (dbtype.equalsIgnoreCase("SQLITE")) {
+		if (dbmode.equalsIgnoreCase("SQLITE")) {
 			connector_ = new SQLiteJDBC(dbname);
-		} else if (dbtype.equalsIgnoreCase("MYSQL")) {
+		} else if (dbmode.equalsIgnoreCase("MYSQL")) {
 			connector_ = new MySqlJDBC(dbname, dbaddr);
 		}
 		if (connector_ == null) throw new NullPointerException("DB connection failed");

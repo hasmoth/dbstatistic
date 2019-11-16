@@ -11,7 +11,7 @@ public class PropertyValues {
  
 	public Properties getPropValues() throws IOException {
 		try {
-			String propFileName = "config.properties";
+			String propFileName = "config/config.properties";
  
 			inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
  
