@@ -12,6 +12,7 @@ public class DbCrawler {
 		        keepRunning = false;
 		        try {
 					mainThread.join();
+					System.out.println("Bye.");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

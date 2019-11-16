@@ -9,10 +9,16 @@ public class TrainType {
 		train_ = TRAIN.NO_KNOWN_TYPE;
 	}
 	
+	/**
+	 * Try to split input string and convert to train type TRAIN.
+	 * If we recognize the train type try to parse the line number.
+	 * 
+	 * @param type input string
+	 */
 	public TrainType(String type) {
 		String[] input = type.split(" ");
 		train_ = convertType(input[0]);
-		if (input.length > 1) {
+		if (input.length > 1 && train_!=TRAIN.NO_KNOWN_TYPE) {
 			try {
 				line_ = Integer.parseInt(input[1]);
 			} catch (NumberFormatException e) {
