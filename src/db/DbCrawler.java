@@ -2,8 +2,21 @@ package db;
 import java.text.ParseException;
 
 public class DbCrawler {
+	static volatile boolean keepRunning = true;
 	
 	public static void main(String[] args) throws ParseException {
+				
+		final Thread mainThread = Thread.currentThread();
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+		    public void run() {
+		        keepRunning = false;
+		        try {
+					mainThread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+		    }
+		});
 		
 		ConnectorFactory connFactory = new ConnectorFactory();
 		DbConnector conn = null;
@@ -14,7 +27,7 @@ public class DbCrawler {
 		}
 		
 		WebCrawler crawl = new WebCrawler();
-		while (true) {
+		while (true && keepRunning) {
 			crawl.pullData();
 			
 			for (TrainInstance inst : crawl.getInstances()) {
