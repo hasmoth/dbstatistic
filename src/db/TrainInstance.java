@@ -52,6 +52,10 @@ public class TrainInstance {
 		return "'" + type_ + "','" + terminus_ + "','" + station_ + "','" + time.format(org_) + "','" + mysqldate.format(date_) + "'," + dly_ + ",'" + reason_ + "'";
 	}
 	
+	public long getDelay() {
+		return this.dly_;
+	}
+	
 	@Override
 	public String toString() {
 		return "TrainInstance [date_=" + date.format(date_) + 
@@ -63,6 +67,20 @@ public class TrainInstance {
 				", reason=" + reason_ +
 				", station=" + station_ +
 				"]";
+	}
+	@Override
+    public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (this.getClass() != obj.getClass()) return false;
+		TrainInstance other = (TrainInstance) obj;
+		if (other.date_ != this.date_) return false;
+		if (other.type_ != this.type_) return false;
+		if (other.org_ != this.org_) return false;
+		if (other.station_ != this.station_) return false;
+		if (other.terminus_ != this.terminus_) return false;
+		
+		return true;
 	}
 	// private
 	private long parseDelay_(Date act, Date org) {

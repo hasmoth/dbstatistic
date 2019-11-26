@@ -29,6 +29,7 @@ public class WebCrawler {
 	private String station_;
 	private String eva_;
 	private Vector<TrainInstance> instances_ = new Vector<TrainInstance>();
+	private Vector<TrainInstance> tmp_ = new Vector<TrainInstance>();
 	final private String csv_ = "/home/thomas/documents/java-workspace/DBStatistic/D_Bahnhof_2017_09.csv";
 	
 	public WebCrawler() {
@@ -124,10 +125,19 @@ public class WebCrawler {
 				// TODO: if a delayed train has left the station, it's actual arrival time might be
 				// reset to the original arrival time resulting in a zero delay. Hence we must be 
 				// mindful of duplicates!
-				instances_.add(ti);
+				int i = tmp_.indexOf(ti);
+				if (i < 0)
+					instances_.add(ti);
+				else {
+					// add only if dly hasn't suddenly changed after the scheduled time has passed
+					if(!(tmp_.get(i).getDelay() > 0 && ti.getDelay() == 0) && (dNow.compareTo(org) > 0))
+						instances_.add(ti);
+				}
 				reason = "";
 			}
 		}
+		// copy collected instances to tmp_
+		tmp_ = instances_;
 	}
 	private ArrayList<String> parseRis(Elements ris) {
 		ArrayList<String> tmp = new ArrayList<String>();
