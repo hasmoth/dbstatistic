@@ -6,16 +6,10 @@ public class DbCrawler {
 	
 	public static void main(String[] args) throws ParseException {
 				
-		final Thread mainThread = Thread.currentThread();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 		    public void run() {
 		        keepRunning = false;
-		        try {
-					mainThread.join();
-					System.out.println("Bye.");
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				System.out.println("Bye.");
 		    }
 		});
 		

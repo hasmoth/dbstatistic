@@ -7,6 +7,7 @@ public class TrainInstance {
 	// date and time formats
 	static private SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 	private SimpleDateFormat date = new SimpleDateFormat ("dd.MM.yy");
+	private SimpleDateFormat mysqldate = new SimpleDateFormat ("yyyy-MM-dd");
 	
 	private Date date_;
 	private TrainType type_ = new TrainType(); // line
@@ -48,7 +49,7 @@ public class TrainInstance {
 	
 	public String getDBString() {
 		// reflects DB table LINE,TERM,STATION,TIME,DATE,DELAY,REASON
-		return "'" + type_ + "','" + terminus_ + "','" + station_ + "','" + org_ + "','" + date_ + "'," + dly_ + ",'" + reason_ + "'";
+		return "'" + type_ + "','" + terminus_ + "','" + station_ + "','" + time.format(org_) + "','" + mysqldate.format(date_) + "'," + dly_ + ",'" + reason_ + "'";
 	}
 	
 	@Override

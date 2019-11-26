@@ -121,6 +121,9 @@ public class WebCrawler {
 					ris = org;
 				}
 				TrainInstance ti = new TrainInstance(dNow, tt, org, ris, terminus, reason, station_);
+				// TODO: if a delayed train has left the station, it's actual arrival time might be
+				// reset to the original arrival time resulting in a zero delay. Hence we must be 
+				// mindful of duplicates!
 				instances_.add(ti);
 				reason = "";
 			}

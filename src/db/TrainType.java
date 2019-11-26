@@ -6,7 +6,7 @@ public class TrainType {
 	
 	public TrainType() {
 		line_ = 0;
-		train_ = TRAIN.NO_KNOWN_TYPE;
+		train_ = TRAIN.N_K_T;
 	}
 	
 	/**
@@ -18,7 +18,7 @@ public class TrainType {
 	public TrainType(String type) {
 		String[] input = type.split(" ");
 		train_ = convertType(input[0]);
-		if (input.length > 1 && train_!=TRAIN.NO_KNOWN_TYPE) {
+		if (input.length > 1 && train_!=TRAIN.N_K_T) {
 			try {
 				line_ = Integer.parseInt(input[1]);
 			} catch (NumberFormatException e) {
@@ -34,8 +34,9 @@ public class TrainType {
 		RE,
 		VIA,
 		IC,
+		EC,
 		ICE,
-		NO_KNOWN_TYPE
+		N_K_T
 	}
 	public void setTrainType(String type, int line) {
 		train_ = convertType(type);
@@ -51,7 +52,7 @@ public class TrainType {
 	}
 
 	private TRAIN convertType(String type) {
-		TRAIN tt = TRAIN.NO_KNOWN_TYPE;
+		TRAIN tt = TRAIN.N_K_T;
 		
 		switch (type) {
 			case "S":
@@ -69,11 +70,14 @@ public class TrainType {
 			case "IC":
 				tt = TRAIN.IC;
 				break;
+			case "EC":
+				tt = TRAIN.EC;
+				break;
 			case "ICE":
 				tt = TRAIN.ICE;
 				break;
 			default:
-				tt = TRAIN.NO_KNOWN_TYPE;
+				tt = TRAIN.N_K_T;
 		}
 		return tt;
 	}

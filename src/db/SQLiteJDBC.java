@@ -35,7 +35,7 @@ public class SQLiteJDBC extends DbConnector {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Opened database successfully!");
+        System.out.println(getClass().getName() + ": Opened database successfully!");
     }
 
     private void createTable(Connection db) {

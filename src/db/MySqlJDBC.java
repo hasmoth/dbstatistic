@@ -33,6 +33,7 @@ public class MySqlJDBC extends DbConnector {
             c.commit();
         } catch (Exception e) {
             System.err.println("insertRow: " + e.getClass().getName() + ": " + e.getMessage());
+            System.out.println(train.getDBString());
             System.exit(0);
         }
     }
@@ -52,7 +53,7 @@ public class MySqlJDBC extends DbConnector {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        System.out.println("Opened database successfully!");
+        System.out.println(getClass().getName() + ": Opened database successfully!");
     }
     private void createTable(Connection db) {
         try {
