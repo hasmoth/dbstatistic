@@ -50,6 +50,12 @@ public class TrainType {
 	public String toString() {
 		return train_ + "" + line_;
 	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		TrainType input = (TrainType) obj;
+		return (input.train_ == this.train_) && (input.line_ == this.line_);
+	}
 
 	private TRAIN convertType(String type) {
 		TRAIN tt = TRAIN.N_K_T;

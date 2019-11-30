@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,10 +23,12 @@ import org.jsoup.select.Elements;
  *
  */
 public class WebCrawler {
-	// date and time formats
-	static private SimpleDateFormat tformat = new SimpleDateFormat("HH:mm");
-	private SimpleDateFormat dformat = new SimpleDateFormat ("dd.MM.yy");
 	Date dNow = new Date();
+	// new time and date objects
+	Calendar cal = Calendar.getInstance();
+	static private SimpleDateFormat tformat = new SimpleDateFormat("HH:mm", Locale.GERMANY);
+	private SimpleDateFormat dformat = new SimpleDateFormat("dd.MM.yy", Locale.GERMANY);
+	private SimpleDateFormat timestamp = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.GERMANY);
 	
 	private Document doc_;
 	private Elements ele_;
@@ -71,7 +77,8 @@ public class WebCrawler {
 	}
 	// privates
 	private void parsePage() throws InterruptedException {
-		dNow = new Date();
+		cal = Calendar.getInstance();
+		dNow = cal.getTime();
 		String nowDate = dformat.format(dNow);
 		String nowTime = tformat.format(dNow);
 		try {
@@ -79,7 +86,7 @@ public class WebCrawler {
 					"https://reiseauskunft.bahn.de/bin/bhftafel.exe/dn?ld=15082&country=DEU&protocol=https:&seqnr=2&ident=fx.02634082.1469799492&rt=1"
 					+ "&input=" + station_ + "%" + eva_
 					+ "&time=" + nowTime + "&date=" + nowDate
-					+ "&ld=15082&productsFilter=1111100000&start=1&boardType=dep&")
+					+ "&ld=15082&productsFilter=1111100000&start=1&boardType=arr&")
 					.userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0").get();
 		} catch (IOException e) {
 			System.out.println("io - " + e);
@@ -92,7 +99,9 @@ public class WebCrawler {
 		}
 		Thread.sleep(60000);
 	}
+	@SuppressWarnings("unchecked")
 	private void parseElements() throws ParseException {
+		Calendar o = Calendar.getInstance();
 		TrainType tt;
 		Date org = new Date();
 		Date ris = new Date();
@@ -102,7 +111,14 @@ public class WebCrawler {
 			if (elem != null) {
 				tt = new TrainType(elem.getElementsByClass("train").text());
 				try {
-					org = tformat.parse(elem.getElementsByClass("time").text());
+					
+					String tmp = elem.getElementsByClass("train").select("a").first().attr("href");
+					Matcher dmatcher = Pattern.compile("date=(.*?)&").matcher(tmp);
+		            dmatcher.find();
+					Matcher tmatcher = Pattern.compile("time=(.*?)&").matcher(tmp);
+					tmatcher.find();
+					o.setTime(timestamp.parse(dmatcher.group(1) + " " + tmatcher.group(1)));
+					org = o.getTime();
 				} catch (ParseException e) {
 					System.out.println("parseElements - org " + e);
 				}
@@ -111,7 +127,14 @@ public class WebCrawler {
 				ArrayList<String> tmp = parseRis(elem.getElementsByClass("ris"));
 				if (tmp.size() > 0) {
 					try {
-						ris = tformat.parse(tmp.get(0));
+						Calendar d = Calendar.getInstance();
+						d.setTime(tformat.parse(tmp.get(0)));
+						d.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+						d.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+						d.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
+						if (d.get(Calendar.HOUR_OF_DAY) < o.get(Calendar.HOUR_OF_DAY))
+							d.add(Calendar.DATE, 1);
+						ris = d.getTime();
 					} catch (ParseException e) {
 						ris = org;
 						reason = tmp.get(0);
@@ -121,23 +144,29 @@ public class WebCrawler {
 				} else {
 					ris = org;
 				}
-				TrainInstance ti = new TrainInstance(dNow, tt, org, ris, terminus, reason, station_);
+				TrainInstance ti = new TrainInstance(org, tt, org, ris, terminus, reason, station_);
 				// TODO: if a delayed train has left the station, it's actual arrival time might be
 				// reset to the original arrival time resulting in a zero delay. Hence we must be 
 				// mindful of duplicates!
 				int i = tmp_.indexOf(ti);
-				if (i < 0)
+				if (i < 0) {
 					instances_.add(ti);
-				else {
+				} else {
 					// add only if dly hasn't suddenly changed after the scheduled time has passed
-					if(!(tmp_.get(i).getDelay() > 0 && ti.getDelay() == 0) && (dNow.compareTo(org) > 0))
+					if(!(tmp_.get(i).getDelay() > 0 && ti.getDelay() == 0 && dNow.compareTo(org) > 0)) {
 						instances_.add(ti);
+					}
+					else {
+						System.out.println(dNow);
+						System.out.println(ti.getDBString());
+						System.out.println(tmp_.get(i).getDBString());
+					}
 				}
 				reason = "";
 			}
 		}
 		// copy collected instances to tmp_
-		tmp_ = instances_;
+		tmp_ = (Vector<TrainInstance>) instances_.clone();
 	}
 	private ArrayList<String> parseRis(Elements ris) {
 		ArrayList<String> tmp = new ArrayList<String>();

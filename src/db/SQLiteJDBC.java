@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SQLiteJDBC extends DbConnector {
     protected Connection c = null;
@@ -46,27 +47,29 @@ public class SQLiteJDBC extends DbConnector {
                         + " (LINE     TEXT(10)  NOT NULL, "
                         + " TERM      TEXT(50)  NOT NULL, "
                         + " STATION   TEXT(50)  NOT NULL, "
-                        + " TIME      TEXT(10)  NOT NULL, "
-                        + " DATE      DATE      NOT NULL, " 
+                        + " OTIME     TEXT(10)  NOT NULL, "
+                        + " ODATE     DATE      NOT NULL, " 
                         + " DELAY     INT, "
                         + " REASON    TEXT(50), "
-                        + " PRIMARY KEY (DATE, TIME, LINE));";
+                        + " 'INSERT'  TEXT(50), "
+                        + " PRIMARY KEY (ODATE, OTIME, LINE));";
                 stmt.executeUpdate(sql);
                 stmt.close();
             }
         } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.err.println("createTable: " + e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
     }
     @Override
     public void insertRow(TrainInstance train) {
         try {
+        	Date now = new Date();
             c.setAutoCommit(false);
 
             stmt = c.createStatement();
-            String sql = " REPLACE INTO DBSTAT (LINE,TERM,STATION,TIME,DATE,DELAY,REASON) "
-                    + " VALUES (" + train.getDBString() + ");";
+            String sql = " REPLACE INTO DBSTAT (LINE,TERM,STATION,OTIME,ODATE,DELAY,REASON,'INSERT') "
+                    + " VALUES (" + train.getDBString() + ",'" + now.toString() + "');";
 
             stmt.executeUpdate(sql);
             stmt.close();

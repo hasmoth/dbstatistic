@@ -71,14 +71,14 @@ public class TrainInstance {
 	@Override
     public boolean equals(Object obj) {
 		if (this == obj) return true;
-		if (obj == null) return false;
+		//if (obj == null) return false;
 		if (this.getClass() != obj.getClass()) return false;
 		TrainInstance other = (TrainInstance) obj;
-		if (other.date_ != this.date_) return false;
-		if (other.type_ != this.type_) return false;
-		if (other.org_ != this.org_) return false;
-		if (other.station_ != this.station_) return false;
-		if (other.terminus_ != this.terminus_) return false;
+		if (!date.format(other.date_).equals(date.format(this.date_))) return false;
+		if (!other.type_.toString().equals(this.type_.toString())) return false;
+		if (!time.format(other.org_).equals(time.format(this.org_)))return false;
+		if (!other.station_.equals(this.station_)) return false;
+		if (!other.terminus_.equals(this.terminus_)) return false;
 		
 		return true;
 	}
