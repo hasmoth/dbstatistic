@@ -111,7 +111,6 @@ public class WebCrawler {
 			if (elem != null) {
 				tt = new TrainType(elem.getElementsByClass("train").text());
 				try {
-					
 					String tmp = elem.getElementsByClass("train").select("a").first().attr("href");
 					Matcher dmatcher = Pattern.compile("date=(.*?)&").matcher(tmp);
 		            dmatcher.find();
@@ -152,11 +151,12 @@ public class WebCrawler {
 				if (i < 0) {
 					instances_.add(ti);
 				} else {
-					// add only if dly hasn't suddenly changed after the scheduled time has passed
+					// add only if dly hasn't suddenly changed to zero after scheduled time has passed
+					// else add last known instance
 					if(!(tmp_.get(i).getDelay() > 0 && ti.getDelay() == 0 && dNow.compareTo(org) > 0)) {
 						instances_.add(ti);
-					}
-					else {
+					} else {
+						instances_.add(tmp_.get(i));
 						System.out.println(dNow);
 						System.out.println(ti.getDBString());
 						System.out.println(tmp_.get(i).getDBString());
@@ -165,7 +165,7 @@ public class WebCrawler {
 				reason = "";
 			}
 		}
-		// copy collected instances to tmp_
+		// pop entries from tmp_ which aren't in instances_
 		tmp_ = (Vector<TrainInstance>) instances_.clone();
 	}
 	private ArrayList<String> parseRis(Elements ris) {
