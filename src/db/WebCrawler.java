@@ -54,6 +54,7 @@ public class WebCrawler {
 	public void pullData() {
 		if (this.station_.isEmpty() || this.eva_.isEmpty()) return;
 		try {
+			System.out.println(dNow);
 			parsePage();
 		} catch (InterruptedException e) {
 			e.printStackTrace();

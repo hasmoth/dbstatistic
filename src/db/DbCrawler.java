@@ -12,7 +12,7 @@ public class DbCrawler {
 				System.out.println("Bye.");
 		    }
 		});
-		
+
 		ConnectorFactory connFactory = new ConnectorFactory();
 		DbConnector conn = null;
 		try {
