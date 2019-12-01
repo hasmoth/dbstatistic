@@ -41,10 +41,12 @@ public class WebCrawler {
 	public WebCrawler() {
 		this.station_ = "Frankfurt(Main)Hbf";
 		this.eva_ = "8000105";
+		System.out.println(dNow + " station: " + this.station_);
 	}
 	public WebCrawler (String station) {
 		this.station_ = station;
 		this.eva_ = getEVA(station_);
+		System.out.println(dNow + " station: " + this.station_);
 	}
 	
 	/**
@@ -54,7 +56,6 @@ public class WebCrawler {
 	public void pullData() {
 		if (this.station_.isEmpty() || this.eva_.isEmpty()) return;
 		try {
-			System.out.println(dNow);
 			parsePage();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
