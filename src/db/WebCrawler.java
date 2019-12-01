@@ -145,7 +145,7 @@ public class WebCrawler {
 					ris = org;
 				}
 				TrainInstance ti = new TrainInstance(org, tt, org, ris, terminus, reason, station_);
-				// TODO: if a delayed train has left the station, it's actual arrival time might be
+				// if a delayed train has left the station, it's actual arrival time might be
 				// reset to the original arrival time resulting in a zero delay. Hence we must be 
 				// mindful of duplicates!
 				int i = tmp_.indexOf(ti);
@@ -166,7 +166,7 @@ public class WebCrawler {
 				reason = "";
 			}
 		}
-		// pop entries from tmp_ which aren't in instances_
+		// cache entries
 		tmp_ = (Vector<TrainInstance>) instances_.clone();
 	}
 	private ArrayList<String> parseRis(Elements ris) {
