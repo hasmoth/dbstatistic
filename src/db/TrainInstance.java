@@ -1,14 +1,17 @@
 package db;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class TrainInstance {
 	// date and time formats
-	static private SimpleDateFormat time = new SimpleDateFormat("HH:mm");
+	public static SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 	private SimpleDateFormat date = new SimpleDateFormat ("dd.MM.yy");
 	private SimpleDateFormat mysqldate = new SimpleDateFormat ("yyyy-MM-dd");
-	
+
 	private Date date_;
 	private TrainType type_ = new TrainType(); // line
 	private Date org_; // scheduled arrival time
@@ -75,7 +78,7 @@ public class TrainInstance {
 		if (this.getClass() != obj.getClass()) return false;
 		TrainInstance other = (TrainInstance) obj;
 		if (!date.format(other.date_).equals(date.format(this.date_))) return false;
-		if (!other.type_.toString().equals(this.type_.toString())) return false;
+		if (!other.type_.equals(this.type_)) return false;
 		if (!time.format(other.org_).equals(time.format(this.org_)))return false;
 		if (!other.station_.equals(this.station_)) return false;
 		if (!other.terminus_.equals(this.terminus_)) return false;
@@ -83,14 +86,14 @@ public class TrainInstance {
 		return true;
 	}
 	// private
+	/*
+	 * return difference in minutes
+	 */
 	private long parseDelay_(Date act, Date org) {
 		long delay_ = 0;
-		
 		delay_ = act.getTime() - org.getTime();
-		
 		if (delay_ < 0)
-			delay_ = -1;
-
+			delay_ = delay_ + 24*60*60*1000;
 		return delay_/1000/60; // [Minutes]
 	}
 }
